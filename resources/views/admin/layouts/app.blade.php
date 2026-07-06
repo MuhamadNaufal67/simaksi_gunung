@@ -4,36 +4,84 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title') - SIMAKSI Admin</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    
+
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background-color: #343a40;
+        :root{
+            --simaksi-primary:#2E7D32;
+            --simaksi-primary-hover:#1B5E20;
+            --simaksi-secondary:#43A047;
+            --simaksi-bg:#F8FAFC;
+            --simaksi-card:#FFFFFF;
+            --simaksi-border:#E5E7EB;
+            --simaksi-text:#1F2937;
+            --simaksi-muted:#6B7280;
+            --simaksi-danger:#DC2626;
+            --simaksi-warning:#F59E0B;
+            --simaksi-success:#16A34A;
+            --simaksi-radius-card:16px;
+            --simaksi-radius-btn:12px;
+            --simaksi-radius-input:10px;
+            --simaksi-shadow:0 10px 30px rgba(0,0,0,.04);
         }
-        .sidebar .nav-link {
-            color: #fff;
+
+        body{background:var(--simaksi-bg); color:var(--simaksi-text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        .card-simaksi{background:var(--simaksi-card); border:1px solid var(--simaksi-border); border-radius:var(--simaksi-radius-card); box-shadow:var(--simaksi-shadow);} 
+        .btn-simaksi-primary{background:linear-gradient(135deg,var(--simaksi-secondary),#20c997); border:0; font-weight:800; border-radius:var(--simaksi-radius-btn);} 
+        .btn-simaksi-primary:hover{filter:brightness(.97);}
+        .btn-simaksi-secondary{background:rgba(67,160,71,.12); color:var(--simaksi-primary); border:1px solid rgba(67,160,71,.35); font-weight:800; border-radius:var(--simaksi-radius-btn);} 
+        .btn-simaksi-secondary:hover{background:rgba(67,160,71,.18);}
+        .badge-simaksi{border-radius:999px; font-weight:800;}
+
+        /* Sidebar */
+        .admin-sidebar{background:linear-gradient(180deg,#0b2f22,#0f3f2d); border-right:1px solid rgba(229,231,235,.15);}
+        .admin-sidebar .brand{padding:14px 16px;}
+        .admin-sidebar .nav{padding:10px 12px;}
+        .admin-sidebar .nav-link{
+            color:rgba(255,255,255,.88);
+            padding:12px 12px;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-weight:700;
+            transition: background .2s ease, color .2s ease, transform .15s ease;
         }
-        .sidebar .nav-link:hover {
-            background-color: #495057;
+        .admin-sidebar .nav-link:hover{background:rgba(255,255,255,.08); transform:translateY(-1px);} 
+        .admin-sidebar .nav-link.active{background:rgba(67,160,71,.24); color:#fff;} 
+        .admin-sidebar .nav-link i{width:18px; text-align:center;}
+
+        /* Topbar */
+        .admin-topbar{height:64px; background:rgba(255,255,255,.9) !important; border-bottom:1px solid var(--simaksi-border);} 
+        .avatar-pill{background:rgba(67,160,71,.12); color:var(--simaksi-primary); font-weight:900; border:1px solid rgba(67,160,71,.25);} 
+
+        /* Content wrapper */
+        .admin-content-wrap{padding:24px;}
+
+        /* Responsive sidebar collapse */
+        @media (max-width: 991.98px){
+            .admin-sidebar{position:fixed; z-index:1030; left:0; top:64px; height:calc(100vh - 64px); width:280px; transform:translateX(-105%); transition:transform .25s ease;}
+            .admin-sidebar.show{transform:translateX(0);} 
+            .admin-content-wrap{padding:16px;}
         }
-        .navbar-brand {
-            font-weight: bold;
-        }
+
     </style>
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row g-0">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-                <div class="position-sticky pt-3">
+            <div class="col-md-3 col-lg-2 admin-sidebar collapse d-md-block" id="adminSidebar">
+                <div class="brand text-center">
+                    <div class="fw-bold text-white">SIMAKSI Admin</div>
+                </div>
+                <div class="position-sticky" style="top:0;">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ route('admin.dashboard') }}">
@@ -89,7 +137,7 @@
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="nav-link btn btn-link text-start w-100">
+                    <button type="submit" class="btn btn-simaksi-secondary w-100 text-start">
                                     <i class="fas fa-sign-out-alt me-2"></i>
                                     Logout
                                 </button>
@@ -100,7 +148,7 @@
             </div>
 
             <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 admin-content-wrap">
                 <!-- Navbar -->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
@@ -115,7 +163,7 @@
                 </nav>
 
                 <!-- Content -->
-                <div class="py-4">
+                <div class="py-3">
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             {{ session('success') }}

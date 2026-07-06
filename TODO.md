@@ -1,43 +1,17 @@
-# Implementasi Sistem Notifikasi Toast Modern
+# TODO - Refactor Tampilan SIMAKSI Gunung (Bootstrap 5, UI/UX Modern)
 
-## Status: Dalam Proses
+## Tahap 1 (Prioritas: Design system + Layout + Dashboard)
+- [x] 1. Bangun design system konsisten (palette hijau, netral abu, putih).
+- [ ] 2. Rapikan wrapper layout utama: navbar, main container, footer. Hilangkan/kurangi CSS inline yang bertabrakan.
+- [ ] 3. Rapikan admin layout: sidebar/navbar/footer agar konsisten dengan design system.
 
-### ✅ Tugas Selesai:
-- [x] Analisis sistem notifikasi saat ini
-- [x] Perencanaan implementasi toast notification
+- [ ] 4. Standarkan typography (font-size, font-weight, line-height) dengan scale yang konsisten.
+- [ ] 5. Standarkan spacing berbasis sistem 8px (8/16/24/32) pada komponen yang tersentuh.
+- [ ] 6. Perbaiki button variants: primary/secondary/success/danger + hover/focus.
+- [ ] 7. Buat komponen dashboard card statistik bergaya SaaS: grid responsif, shadow/border konsisten.
+- [ ] 8. Standarkan card, badge/status, table, form, modal, alert (minimal yang muncul di dashboard).
+- [ ] 9. Pastikan responsive desktop/tablet/mobile (navbar tidak tabrakan; grid tidak overflow).
 
-### 🔄 Tugas Saat Ini:
-- [ ] Membuat komponen toast notification
-- [ ] Menambahkan toast ke layout utama
-- [ ] Implementasi JavaScript untuk toast
-- [ ] Update tampilan alert yang ada
-- [ ] Testing dan verifikasi
+## Tahap 2 (CRUD konsisten)
+- [ ] Terapkan style komponen yang sama ke halaman CRUD (gunung, rute, pendaftaran, kebutuhan alat, pembayaran, dll).
 
-### 📋 Detail Implementasi:
-
-**Informasi yang Terkumpul:**
-- Sistem saat ini menggunakan Laravel session flash messages dengan Bootstrap alerts
-- Alert muncul di berbagai halaman (login, register, admin panels, dll)
-- Perlu diganti dengan notifikasi toast modern yang muncul sebagai popup
-
-**Rencana Implementasi:**
-1. **Membuat Komponen Toast:** Bangun komponen toast notification yang dapat digunakan ulang dengan styling modern
-2. **Menambahkan ke Layout:** Integrasikan sistem toast ke layout utama (app.blade.php, main.blade.php, admin layouts)
-3. **Implementasi JavaScript:** Buat fungsionalitas toast yang dapat dipicu dari session messages dan JavaScript
-4. **Update Alert yang Ada:** Ganti tampilan alert saat ini dengan pemicu toast
-5. **Styling & Animasi:** Tambahkan animasi smooth dan styling popup modern
-
-**File yang Akan Diedit:**
-- `resources/views/layouts/app.blade.php`
-- `resources/views/layouts/main.blade.php`
-- `resources/views/admin/layouts/app.blade.php`
-- `resources/views/auth/login.blade.php`
-- `resources/views/auth/register.blade.php`
-- `resources/views/pendaftaran/create.blade.php`
-- `resources/views/admin/pendaftaran/index.blade.php`
-- `resources/views/pendaftaran/index.blade.php`
-
-**Langkah Selanjutnya:**
-- Test notifikasi toast di berbagai halaman
-- Pastikan responsif di mobile
-- Verifikasi auto-dismiss dan close manual
