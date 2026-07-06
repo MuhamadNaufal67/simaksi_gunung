@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title') - SIMAKSI Admin</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -14,172 +17,523 @@
 
     <style>
         :root{
-            --simaksi-primary:#2E7D32;
-            --simaksi-primary-hover:#1B5E20;
-            --simaksi-secondary:#43A047;
-            --simaksi-bg:#F8FAFC;
-            --simaksi-card:#FFFFFF;
-            --simaksi-border:#E5E7EB;
-            --simaksi-text:#1F2937;
-            --simaksi-muted:#6B7280;
-            --simaksi-danger:#DC2626;
-            --simaksi-warning:#F59E0B;
-            --simaksi-success:#16A34A;
-            --simaksi-radius-card:16px;
-            --simaksi-radius-btn:12px;
-            --simaksi-radius-input:10px;
-            --simaksi-shadow:0 10px 30px rgba(0,0,0,.04);
+            --admin-bg:#f3f5f4;
+            --admin-sidebar-bg:#0b241a;
+            --admin-sidebar-bg-2:#0a2019;
+            --admin-accent:#15803d;
+            --admin-accent-soft:rgba(21,128,61,.16);
+            --admin-accent-hover:#166534;
+            --admin-card:#ffffff;
+            --admin-border:#e6e9e8;
+            --admin-text:#1c2521;
+            --admin-muted:#6b756f;
+            --admin-danger:#dc2626;
+            --admin-warning:#d97706;
+            --admin-info:#0284c7;
+            --admin-radius-lg:16px;
+            --admin-radius-md:12px;
+            --admin-radius-sm:10px;
+            --admin-shadow:0 1px 2px rgba(16,24,20,.04), 0 1px 8px rgba(16,24,20,.04);
+            --admin-shadow-md:0 4px 16px rgba(16,24,20,.06);
+            --sidebar-width:260px;
+            --topbar-height:64px;
         }
 
-        body{background:var(--simaksi-bg); color:var(--simaksi-text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-        .card-simaksi{background:var(--simaksi-card); border:1px solid var(--simaksi-border); border-radius:var(--simaksi-radius-card); box-shadow:var(--simaksi-shadow);} 
-        .btn-simaksi-primary{background:linear-gradient(135deg,var(--simaksi-secondary),#20c997); border:0; font-weight:800; border-radius:var(--simaksi-radius-btn);} 
-        .btn-simaksi-primary:hover{filter:brightness(.97);}
-        .btn-simaksi-secondary{background:rgba(67,160,71,.12); color:var(--simaksi-primary); border:1px solid rgba(67,160,71,.35); font-weight:800; border-radius:var(--simaksi-radius-btn);} 
-        .btn-simaksi-secondary:hover{background:rgba(67,160,71,.18);}
-        .badge-simaksi{border-radius:999px; font-weight:800;}
+        *{box-sizing:border-box;}
 
-        /* Sidebar */
-        .admin-sidebar{background:linear-gradient(180deg,#0b2f22,#0f3f2d); border-right:1px solid rgba(229,231,235,.15);}
-        .admin-sidebar .brand{padding:14px 16px;}
-        .admin-sidebar .nav{padding:10px 12px;}
-        .admin-sidebar .nav-link{
-            color:rgba(255,255,255,.88);
-            padding:12px 12px;
-            border-radius:12px;
+        html, body{height:100%;}
+
+        body{
+            background:var(--admin-bg);
+            color:var(--admin-text);
+            font-family:'Plus Jakarta Sans','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1,h2,h3,h4,h5,h6{font-weight:700; letter-spacing:-.01em;}
+
+        a{ text-decoration:none; }
+
+        /* ============================================================
+           SHELL LAYOUT
+        ============================================================ */
+        .admin-shell{
+            display:flex;
+            align-items:flex-start;
+            min-height:100vh;
+        }
+
+        /* ============================================================
+           SIDEBAR
+        ============================================================ */
+        .admin-sidebar{
+            width:var(--sidebar-width);
+            flex-shrink:0;
+            background:linear-gradient(180deg,var(--admin-sidebar-bg),var(--admin-sidebar-bg-2));
+            position:sticky;
+            top:0;
+            height:100vh;
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+            z-index:1040;
+            border-right:1px solid rgba(255,255,255,.06);
+        }
+        .admin-sidebar::-webkit-scrollbar{width:6px;}
+        .admin-sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:6px;}
+
+        .sidebar-brand{
             display:flex;
             align-items:center;
-            gap:10px;
-            font-weight:700;
-            transition: background .2s ease, color .2s ease, transform .15s ease;
+            gap:.65rem;
+            padding:1.1rem 1.25rem;
+            border-bottom:1px solid rgba(255,255,255,.07);
         }
-        .admin-sidebar .nav-link:hover{background:rgba(255,255,255,.08); transform:translateY(-1px);} 
-        .admin-sidebar .nav-link.active{background:rgba(67,160,71,.24); color:#fff;} 
-        .admin-sidebar .nav-link i{width:18px; text-align:center;}
+        .sidebar-brand-icon{
+            width:38px;
+            height:38px;
+            border-radius:10px;
+            background:var(--admin-accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            font-size:1rem;
+            flex-shrink:0;
+            box-shadow:0 4px 10px rgba(21,128,61,.4);
+        }
+        .sidebar-brand-text{ line-height:1.2; }
+        .sidebar-brand-text .name{ color:#fff; font-weight:800; font-size:.98rem; display:block; }
+        .sidebar-brand-text .sub{ color:rgba(255,255,255,.45); font-size:.72rem; font-weight:500; }
+
+        .sidebar-nav{
+            padding:1rem .85rem;
+            flex:1;
+        }
+        .sidebar-nav .nav-section-label{
+            color:rgba(255,255,255,.32);
+            font-size:.68rem;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+            padding:.5rem .6rem .4rem;
+        }
+        .sidebar-nav .nav-link{
+            display:flex;
+            align-items:center;
+            gap:.75rem;
+            color:rgba(255,255,255,.68);
+            padding:.62rem .75rem;
+            border-radius:var(--admin-radius-sm);
+            font-weight:600;
+            font-size:.885rem;
+            margin-bottom:.15rem;
+            transition:background .16s ease, color .16s ease;
+        }
+        .sidebar-nav .nav-link i{
+            width:18px;
+            text-align:center;
+            font-size:.92rem;
+            flex-shrink:0;
+            opacity:.9;
+        }
+        .sidebar-nav .nav-link:hover{
+            background:rgba(255,255,255,.06);
+            color:#fff;
+        }
+        .sidebar-nav .nav-link.active{
+            background:var(--admin-accent-soft);
+            color:#fff;
+            box-shadow:inset 3px 0 0 var(--admin-accent);
+        }
+
+        .sidebar-footer{
+            padding:.85rem;
+            border-top:1px solid rgba(255,255,255,.07);
+        }
+        .sidebar-footer .btn{
+            background:rgba(255,255,255,.06);
+            color:rgba(255,255,255,.85);
+            border:1px solid rgba(255,255,255,.10);
+            font-weight:600;
+            font-size:.85rem;
+        }
+        .sidebar-footer .btn:hover{
+            background:rgba(255,255,255,.12);
+            color:#fff;
+        }
+
+        /* Mobile sidebar off-canvas */
+        @media (max-width: 991.98px){
+            .admin-sidebar{
+                position:fixed;
+                left:0;
+                top:0;
+                transform:translateX(-100%);
+                transition:transform .25s ease;
+                box-shadow:0 0 0 rgba(0,0,0,0);
+            }
+            .admin-sidebar.show{
+                transform:translateX(0);
+                box-shadow:12px 0 32px rgba(0,0,0,.25);
+            }
+            .sidebar-backdrop{
+                display:none;
+                position:fixed;
+                inset:0;
+                background:rgba(10,20,16,.45);
+                z-index:1035;
+            }
+            .sidebar-backdrop.show{ display:block; }
+        }
+
+        /* ============================================================
+           MAIN COLUMN
+        ============================================================ */
+        .admin-main{
+            flex:1;
+            min-width:0;
+            display:flex;
+            flex-direction:column;
+        }
 
         /* Topbar */
-        .admin-topbar{height:64px; background:rgba(255,255,255,.9) !important; border-bottom:1px solid var(--simaksi-border);} 
-        .avatar-pill{background:rgba(67,160,71,.12); color:var(--simaksi-primary); font-weight:900; border:1px solid rgba(67,160,71,.25);} 
+        .admin-topbar{
+            height:var(--topbar-height);
+            background:#ffffff;
+            border-bottom:1px solid var(--admin-border);
+            box-shadow:0 1px 3px rgba(16,24,20,.03);
+            position:sticky;
+            top:0;
+            z-index:1020;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 1.25rem;
+            gap:1rem;
+        }
+        .topbar-left{ display:flex; align-items:center; gap:.85rem; min-width:0; }
+        .sidebar-toggle-btn{
+            display:none;
+            width:38px;
+            height:38px;
+            border-radius:var(--admin-radius-sm);
+            border:1px solid var(--admin-border);
+            background:#fff;
+            color:var(--admin-text);
+            align-items:center;
+            justify-content:center;
+            flex-shrink:0;
+        }
+        @media (max-width: 991.98px){
+            .sidebar-toggle-btn{ display:inline-flex; }
+        }
+        .breadcrumb-simaksi{
+            display:flex;
+            flex-direction:column;
+            min-width:0;
+        }
+        .breadcrumb-simaksi .crumb-trail{
+            font-size:.72rem;
+            color:var(--admin-muted);
+            font-weight:600;
+            text-transform:uppercase;
+            letter-spacing:.05em;
+        }
+        .breadcrumb-simaksi .crumb-title{
+            font-size:1rem;
+            font-weight:700;
+            color:var(--admin-text);
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+
+        .topbar-right{ display:flex; align-items:center; gap:.85rem; flex-shrink:0; }
+        .admin-user-pill{
+            display:flex;
+            align-items:center;
+            gap:.6rem;
+            padding:.35rem .6rem .35rem .35rem;
+            border-radius:999px;
+            border:1px solid var(--admin-border);
+            background:#fbfcfb;
+        }
+        .admin-user-avatar{
+            width:34px;
+            height:34px;
+            border-radius:50%;
+            background:var(--admin-accent-soft);
+            color:var(--admin-accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:800;
+            font-size:.85rem;
+            flex-shrink:0;
+        }
+        .admin-user-meta{ line-height:1.15; }
+        .admin-user-meta .u-name{ font-size:.85rem; font-weight:700; color:var(--admin-text); display:block; }
+        .admin-user-meta .u-role{ font-size:.72rem; color:var(--admin-muted); }
+
+        @media (max-width: 575.98px){
+            .admin-user-meta{ display:none; }
+        }
 
         /* Content wrapper */
-        .admin-content-wrap{padding:24px;}
-
-        /* Responsive sidebar collapse */
-        @media (max-width: 991.98px){
-            .admin-sidebar{position:fixed; z-index:1030; left:0; top:64px; height:calc(100vh - 64px); width:280px; transform:translateX(-105%); transition:transform .25s ease;}
-            .admin-sidebar.show{transform:translateX(0);} 
-            .admin-content-wrap{padding:16px;}
+        .admin-content-wrap{
+            padding:1.75rem;
+            max-width:1400px;
+            width:100%;
         }
+        @media (max-width: 767.98px){
+            .admin-content-wrap{ padding:1.1rem; }
+        }
+
+        /* ============================================================
+           GLOBAL COMPONENT SYSTEM (applies across all admin pages)
+        ============================================================ */
+
+        /* Cards */
+        .card{
+            border:1px solid var(--admin-border);
+            border-radius:var(--admin-radius-lg);
+            box-shadow:var(--admin-shadow);
+        }
+        .card-header{
+            background:transparent;
+            border-bottom:1px solid var(--admin-border);
+            font-weight:700;
+            padding:1rem 1.25rem;
+        }
+        .card-body{ padding:1.25rem; }
+
+        /* Buttons */
+        .btn{
+            border-radius:var(--admin-radius-sm);
+            font-weight:600;
+            font-size:.875rem;
+            padding:.5rem 1rem;
+            transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+        }
+        .btn:hover{ transform:translateY(-1px); }
+        .btn-sm{ border-radius:8px; padding:.32rem .65rem; font-size:.8rem; }
+        .btn-primary{ background:var(--admin-accent); border-color:var(--admin-accent); }
+        .btn-primary:hover{ background:var(--admin-accent-hover); border-color:var(--admin-accent-hover); }
+        .btn-success{ background:var(--admin-accent); border-color:var(--admin-accent); }
+        .btn-success:hover{ background:var(--admin-accent-hover); border-color:var(--admin-accent-hover); }
+        .btn-outline-primary{ color:var(--admin-accent); border-color:var(--admin-accent); }
+        .btn-outline-primary:hover{ background:var(--admin-accent); border-color:var(--admin-accent); }
+        .btn-danger{ background:var(--admin-danger); border-color:var(--admin-danger); }
+        .btn-secondary{ background:#f1f3f2; border-color:var(--admin-border); color:var(--admin-text); }
+        .btn-secondary:hover{ background:#e7eae8; color:var(--admin-text); }
+
+        .btn-simaksi-primary{background:var(--admin-accent); border:0; font-weight:700; border-radius:var(--admin-radius-sm); color:#fff;}
+        .btn-simaksi-primary:hover{background:var(--admin-accent-hover); color:#fff;}
+        .btn-simaksi-secondary{background:var(--admin-accent-soft); color:var(--admin-accent); border:1px solid rgba(21,128,61,.25); font-weight:700; border-radius:var(--admin-radius-sm);}
+        .btn-simaksi-secondary:hover{background:rgba(21,128,61,.22);}
+
+        /* Forms */
+        .form-label{ font-weight:600; font-size:.85rem; color:var(--admin-text); margin-bottom:.4rem; }
+        .form-control, .form-select{
+            border-radius:var(--admin-radius-sm);
+            border:1px solid var(--admin-border);
+            padding:.55rem .8rem;
+            font-size:.9rem;
+            min-height:42px;
+        }
+        .form-control:focus, .form-select:focus{
+            border-color:var(--admin-accent);
+            box-shadow:0 0 0 3px var(--admin-accent-soft);
+        }
+        textarea.form-control{ min-height:auto; }
+
+        .alert{
+            border:1px solid transparent;
+            border-radius:var(--admin-radius-md);
+            font-size:.9rem;
+            padding:.85rem 1.1rem;
+        }
+        .alert-success{ background:#ecfdf3; color:#166534; border-color:#bbf0cf; }
+        .alert-danger{ background:#fef2f2; color:#b91c1c; border-color:#fecaca; }
+        .alert-warning{ background:#fffbeb; color:#92400e; border-color:#fde68a; }
+        .alert-info{ background:#f0f9ff; color:#075985; border-color:#bae6fd; }
+
+        /* Tables */
+        .table{
+            margin-bottom:0;
+            font-size:.875rem;
+        }
+        .table thead th{
+            background:#fafbfa;
+            color:var(--admin-muted);
+            font-size:.72rem;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.04em;
+            border-bottom:1px solid var(--admin-border);
+            padding:.85rem 1rem;
+            white-space:nowrap;
+        }
+        .table tbody td{
+            padding:.85rem 1rem;
+            vertical-align:middle;
+            border-bottom:1px solid var(--admin-border);
+            color:var(--admin-text);
+        }
+        .table-striped tbody tr:nth-of-type(odd) td{
+            background:#fafcfb;
+        }
+        .table-hover tbody tr:hover td{
+            background:var(--admin-accent-soft);
+        }
+        .table-bordered, .table-bordered th, .table-bordered td{ border-color:var(--admin-border); }
+
+        /* Badges (Bootstrap 4-style class names used across admin views, restyled for BS5) */
+        .badge{ font-weight:700; border-radius:999px; padding:.4em .75em; font-size:.72rem; letter-spacing:.02em; }
+        .badge-primary{ background:var(--admin-accent-soft); color:var(--admin-accent); }
+        .badge-secondary{ background:#eef0ef; color:#4b544e; }
+        .badge-success{ background:#dcfce7; color:#15803d; }
+        .badge-danger{ background:#fee2e2; color:#b91c1c; }
+        .badge-warning{ background:#fef3c7; color:#92400e; }
+        .badge-info{ background:#e0f2fe; color:#075985; }
+
+        /* Stat cards (used on dashboard) */
+        .stat-card{
+            background:var(--admin-card);
+            border:1px solid var(--admin-border);
+            border-radius:var(--admin-radius-lg);
+            box-shadow:var(--admin-shadow);
+            padding:1.25rem;
+            display:flex;
+            align-items:center;
+            gap:1rem;
+            height:100%;
+            transition:box-shadow .18s ease, transform .18s ease;
+        }
+        .stat-card:hover{ box-shadow:var(--admin-shadow-md); transform:translateY(-2px); }
+        .stat-icon{
+            width:48px;
+            height:48px;
+            border-radius:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.1rem;
+            flex-shrink:0;
+        }
+        .stat-icon-green{ background:#dcfce7; color:#15803d; }
+        .stat-icon-blue{ background:#dbeafe; color:#1d4ed8; }
+        .stat-icon-amber{ background:#fef3c7; color:#b45309; }
+        .stat-icon-sky{ background:#e0f2fe; color:#0369a1; }
+        .stat-icon-slate{ background:#e2e8f0; color:#334155; }
+        .stat-info{ min-width:0; display:flex; flex-direction:column; gap:.15rem; }
+        .stat-label{ font-size:.78rem; color:var(--admin-muted); font-weight:600; }
+        .stat-value{ font-size:1.5rem; font-weight:800; color:var(--admin-text); line-height:1.1; }
+
+        /* Page section title used inside content (optional helper) */
+        .page-heading{ margin-bottom:1.5rem; }
+        .page-heading h1{ font-size:1.35rem; margin-bottom:.15rem; }
+        .page-heading p{ color:var(--admin-muted); font-size:.88rem; margin-bottom:0; }
 
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row g-0">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 admin-sidebar collapse d-md-block" id="adminSidebar">
-                <div class="brand text-center">
-                    <div class="fw-bold text-white">SIMAKSI Admin</div>
-                </div>
-                <div class="position-sticky" style="top:0;">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('admin.dashboard') }}">
-                                <i class="fas fa-tachometer-alt me-2"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.gunung.index') }}">
-                                <i class="fas fa-mountain me-2"></i>
-                                Manajemen Gunung
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.rute-pendakian.index') }}">
-                                <i class="fas fa-route me-2"></i>
-                                Manajemen Rute
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.pendaftaran.index') }}">
-                                <i class="fas fa-clipboard-list me-2"></i>
-                                Manajemen Pendaftaran
-                            </a>
-                        </li>
-                        {{-- Menu Manajemen Pembayaran dihilangkan sesuai permintaan --}}
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.pembayaran.index') }}">
-                                <i class="fas fa-credit-card me-2"></i>
-                                Manajemen Pembayaran
-                            </a>
-                        </li> --}}
-                        {{-- Menu Verifikasi Peminjaman dihilangkan sesuai permintaan --}}
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.peminjaman.index') }}">
-                                <i class="fas fa-tools me-2"></i>
-                                Verifikasi Peminjaman
-                            </a>
-                        </li> --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.users.index') }}">
-                                <i class="fas fa-users me-2"></i>
-                                Manajemen User
-                            </a>
-                        </li>
-                        {{-- Menu Kembali ke User dihilangkan sesuai permintaan --}}
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">
-                                <i class="fas fa-arrow-left me-2"></i>
-                                Kembali ke User
-                            </a>
-                        </li> --}}
-                        <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                    <button type="submit" class="btn btn-simaksi-secondary w-100 text-start">
-                                    <i class="fas fa-sign-out-alt me-2"></i>
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
+    <div class="admin-shell">
+
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon"><i class="fas fa-mountain"></i></div>
+                <div class="sidebar-brand-text">
+                    <span class="name">SIMAKSI</span>
+                    <span class="sub">Admin Panel</span>
                 </div>
             </div>
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 admin-content-wrap">
-                <!-- Navbar -->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <span class="navbar-brand">SIMAKSI Admin Panel</span>
-                        <span class="navbar-text">
-                            Selamat datang, {{ Auth::user()->nama_lengkap }}
-                        </span>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Menu Utama</div>
+                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                    <i class="fas fa-gauge-high"></i> Dashboard
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.gunung.*') ? 'active' : '' }}" href="{{ route('admin.gunung.index') }}">
+                    <i class="fas fa-mountain"></i> Manajemen Gunung
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.rute-pendakian.*') ? 'active' : '' }}" href="{{ route('admin.rute-pendakian.index') }}">
+                    <i class="fas fa-route"></i> Manajemen Rute
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}" href="{{ route('admin.pendaftaran.index') }}">
+                    <i class="fas fa-clipboard-list"></i> Manajemen Pendaftaran
+                </a>
+                {{-- Menu Manajemen Pembayaran dihilangkan sesuai permintaan --}}
+                {{-- <a class="nav-link" href="{{ route('admin.pembayaran.index') }}"><i class="fas fa-credit-card"></i> Manajemen Pembayaran</a> --}}
+                {{-- Menu Verifikasi Peminjaman dihilangkan sesuai permintaan --}}
+                {{-- <a class="nav-link" href="{{ route('admin.peminjaman.index') }}"><i class="fas fa-tools"></i> Verifikasi Peminjaman</a> --}}
+                <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                    <i class="fas fa-users"></i> Manajemen User
+                </a>
+                {{-- Menu Kembali ke User dihilangkan sesuai permintaan --}}
+                {{-- <a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-arrow-left"></i> Kembali ke User</a> --}}
+            </nav>
+
+            <div class="sidebar-footer">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn w-100 text-start">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- ================= MAIN ================= -->
+        <div class="admin-main">
+
+            <!-- Topbar -->
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" type="button" aria-label="Buka menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    @php
+                        $__pageTitle = trim(str_replace('- Admin', '', $__env->yieldContent('title', 'Dashboard')));
+                        $__pageTitle = $__pageTitle !== '' ? $__pageTitle : 'Dashboard';
+                    @endphp
+                    <div class="breadcrumb-simaksi">
+                        <span class="crumb-trail">Admin / {{ $__pageTitle }}</span>
+                        <span class="crumb-title">{{ $__pageTitle }}</span>
                     </div>
-                </nav>
-
-                <!-- Content -->
-                <div class="py-3">
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    @yield('content')
                 </div>
+
+                <div class="topbar-right">
+                    <div class="admin-user-pill">
+                        <div class="admin-user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? 'A', 0, 1)) }}</div>
+                        <div class="admin-user-meta">
+                            <span class="u-name">{{ Auth::user()->nama_lengkap }}</span>
+                            <span class="u-role">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="admin-content-wrap">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @yield('content')
             </main>
         </div>
     </div>
@@ -211,14 +565,28 @@
             };
         })();
     </script>
-    
+
     <script>
-        // Simple sidebar toggle
-        document.querySelector('.navbar-toggler').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('collapse');
-        });
+        // Sidebar toggle (mobile off-canvas)
+        (function(){
+            const sidebar = document.getElementById('adminSidebar');
+            const toggleBtn = document.getElementById('sidebarToggleBtn');
+            const backdrop = document.getElementById('sidebarBackdrop');
+
+            function openSidebar(){ sidebar.classList.add('show'); backdrop.classList.add('show'); }
+            function closeSidebar(){ sidebar.classList.remove('show'); backdrop.classList.remove('show'); }
+
+            if (toggleBtn){
+                toggleBtn.addEventListener('click', function(){
+                    sidebar.classList.contains('show') ? closeSidebar() : openSidebar();
+                });
+            }
+            if (backdrop){
+                backdrop.addEventListener('click', closeSidebar);
+            }
+        })();
     </script>
-    
+
     {{-- Allow pages to push scripts --}}
     @stack('scripts')
 </body>
