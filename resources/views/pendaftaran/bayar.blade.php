@@ -1,148 +1,168 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pembayaran SIMAKSI Gunung</title>
+@extends('layouts.main')
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Pembayaran SIMAKSI')
 
-  <!-- Midtrans Snap -->
-  <script type="text/javascript"
+@section('content')
+
+<div class="app-content">
+
+    {{-- ===================== Page Heading + Breadcrumb ===================== --}}
+    <div class="page-heading">
+        <div class="breadcrumb-simaksi">
+            <a href="{{ route('dashboard') }}">Home</a>
+            <span class="mx-2">/</span>
+            <span>SIMAKSI</span>
+            <span class="mx-2">/</span>
+            <span class="fw-semibold">Pembayaran</span>
+        </div>
+        <h1 class="fw-bold">💳 Pembayaran SIMAKSI</h1>
+        <p class="mb-0">Invoice modern untuk menyelesaikan pembayaran pendaftaran Anda.</p>
+    </div>
+
+    <div class="row g-3 align-items-start">
+
+        <div class="col-12">
+            <div class="card-simaksi overflow-hidden">
+                <div class="card-header">
+                    <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-primary bg-opacity-10 text-success border border-success border-opacity-25">
+                                <i class="fa fa-receipt me-1"></i>Invoice
+                            </span>
+                            <div class="fw-bold">#{{ $pendaftaran->id_pendaftaran }}</div>
+                        </div>
+                        <div>
+                            <a href="{{ route('pendaftaran.index') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-arrow-left me-2"></i>Kembali
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {{-- ===================== Invoice Header ===================== --}}
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-7">
+                            <div class="d-flex flex-column gap-2">
+                                <div class="d-flex align-items-start justify-content-between gap-3">
+                                    <div>
+                                        <div class="text-muted small">Nama Gunung</div>
+                                        <div class="fw-bold fs-5">{{ $pendaftaran->rutePendakian->gunung->nama_gunung ?? '-' }}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-muted small">Tanggal</div>
+                                        <div class="fw-bold">{{ \Carbon\Carbon::parse($pendaftaran->tanggal_pendakian)->format('d M Y') }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-start justify-content-between gap-3">
+                                    <div>
+                                        <div class="text-muted small">Rute</div>
+                                        <div class="fw-semibold">{{ $pendaftaran->rutePendakian->nama_rute ?? '-' }}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-muted small">Status Pembayaran</div>
+                                        <div>
+                                            @if(($pendaftaran->status_pembayaran ?? null) === 'lunas' || ($pendaftaran->status_pembayaran ?? null) === 'paid')
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                                    <i class="fa fa-check me-1"></i>Lunas
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                                    <i class="fa fa-hourglass-half me-1"></i>Belum Lunas
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Midtrans / VA info (tampilan saja) --}}
+                                <div class="alert alert-info border-0">
+                                    <div class="fw-bold mb-1"><i class="fa fa-lock me-2"></i>Metode Pembayaran</div>
+                                    <div class="small text-muted mb-1">VA / Midtrans akan diproses oleh sistem.</div>
+                                    <div class="fw-semibold">Token SNAP: <span class="text-muted">{{ $snapToken ? 'tersedia' : '-' }}</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-5">
+                            <div class="card" style="border:1px solid var(--simaksi-border); border-radius:16px;">
+                                <div class="card-body">
+                                    <div class="text-muted small mb-1">Total Pembayaran</div>
+                                    <div class="fw-bold" style="font-size:1.9rem; color:var(--simaksi-primary);">
+                                        Rp{{ number_format($pendaftaran->total_biaya ?? ($pendaftaran->rutePendakian->harga ?? 0), 0, ',', '.') }}
+                                    </div>
+
+                                    <div class="d-grid gap-2 mt-4">
+                                        <button id="pay-button" class="btn btn-simaksi-primary text-white fw-bold">
+                                            <i class="fa fa-credit-card me-2"></i>Bayar
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary fw-bold" onclick="window.location='{{ route('pendaftaran.index') }}'">
+                                            <i class="fa fa-arrow-left me-2"></i>Kembali
+                                        </button>
+                                    </div>
+
+                                    <div class="text-center mt-3 small text-muted">
+                                        <i class="fa fa-shield-halved me-1" style="color:var(--simaksi-primary);"></i>
+                                        Pembayaran aman dan terenkripsi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- ===================== Hidden values / placeholders for logic ===================== --}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{{-- ===== Keep Midtrans Snap logic identical ===== --}}
+{{-- Midtrans Snap already loaded in layout? If not, we include script. --}}
+<script type="text/javascript"
     src="https://app.sandbox.midtrans.com/snap/snap.js"
-    data-client-key="{{ config('midtrans.client_key') }}"></script>
+    data-client-key="{{ config('midtrans.client_key') }}">
+</script>
 
-  <!-- SweetAlert2 for nicer notifications -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
-  <style>
-    body {
-      background: linear-gradient(to bottom right, #e8f5e9, #c8e6c9);
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card {
-      border: none;
-      border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-      background: #fff;
-      width: 380px;
-      animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .header {
-      background-color: #388e3c;
-      color: #fff;
-      border-radius: 16px 16px 0 0;
-      text-align: center;
-      padding: 16px 0;
-    }
-
-    .header h4 {
-      margin: 0;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .card-body {
-      padding: 24px;
-    }
-
-    .info {
-      color: #1b5e20;
-      font-weight: 500;
-    }
-
-    .label {
-      font-weight: 600;
-      color: #2e7d32;
-    }
-
-    .btn-pay {
-      background-color: #43a047;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 0;
-      font-weight: 600;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-
-    .btn-pay:hover {
-      background-color: #2e7d32;
-      transform: translateY(-2px);
-    }
-  </style>
-</head>
-
-<body>
-  <div class="card">
-    <div class="header">
-      <h4>Pembayaran SIMAKSI</h4>
-    </div>
-    <div class="card-body">
-      <p class="info">
-        Halo, <strong>{{ auth()->user()->name ?? 'Pendaki' }}</strong> 👋
-      </p>
-      <hr>
-      <p><span class="label">Gunung:</span> {{ $pendaftaran->rutePendakian->gunung->nama_gunung ?? '-' }}</p>
-      <p><span class="label">Rute:</span> {{ $pendaftaran->rutePendakian->nama_rute ?? '-' }}</p>
-      <p><span class="label">Tanggal Pendakian:</span> {{ $pendaftaran->tanggal_pendakian }}</p>
-      <p><span class="label">Total Bayar:</span> Rp{{ number_format($pendaftaran->rutePendakian->harga ?? 0, 0, ',', '.') }}</p>
-      <hr>
-      <button id="pay-button" class="btn-pay">
-        💳 Bayar Sekarang
-      </button>
-    </div>
-  </div>
-
-  <script type="text/javascript">
-    const payButton = document.getElementById('pay-button');
-    payButton.addEventListener('click', function () {
-      window.snap.pay('{{ $snapToken }}', {
-        onSuccess: function(result){
-          Swal.fire({
-            icon: 'success',
-            title: 'Pembayaran Berhasil',
-            text: 'Silakan tunggu persetujuan admin untuk mencetak formulir SIMAKSI.',
-            confirmButtonColor: '#28a745'
-          }).then(() => { window.location.href = '/pendaftaran'; });
-        },
-        onPending: function(result){
-          Swal.fire({
-            icon: 'info',
-            title: 'Menunggu Pembayaran',
-            text: 'Transaksi kamu masih menunggu penyelesaian.',
-          });
-        },
-        onError: function(result){
-          Swal.fire({
-            icon: 'error',
-            title: 'Pembayaran Gagal',
-            text: 'Terjadi kesalahan saat memproses pembayaran. Coba lagi ya.'
-          });
-        },
-        onClose: function(){
-          Swal.fire({
-            icon: 'warning',
-            title: 'Pembayaran Belum Selesai',
-            text: 'Kamu menutup popup sebelum pembayaran selesai.'
-          });
-        }
-      });
+<script type="text/javascript">
+  const payButton = document.getElementById('pay-button');
+  payButton.addEventListener('click', function () {
+    window.snap.pay('{{ $snapToken }}', {
+      onSuccess: function(result){
+        Swal.fire({
+          icon: 'success',
+          title: 'Pembayaran Berhasil',
+          text: 'Silakan tunggu persetujuan admin untuk mencetak formulir SIMAKSI.',
+          confirmButtonColor: '#28a745'
+        }).then(() => { window.location.href = '/pendaftaran'; });
+      },
+      onPending: function(result){
+        Swal.fire({
+          icon: 'info',
+          title: 'Menunggu Pembayaran',
+          text: 'Transaksi kamu masih menunggu penyelesaian.',
+        });
+      },
+      onError: function(result){
+        Swal.fire({
+          icon: 'error',
+          title: 'Pembayaran Gagal',
+          text: 'Terjadi kesalahan saat memproses pembayaran. Coba lagi ya.'
+        });
+      },
+      onClose: function(){
+        Swal.fire({
+          icon: 'warning',
+          title: 'Pembayaran Belum Selesai',
+          text: 'Kamu menutup popup sebelum pembayaran selesai.'
+        });
+      }
     });
-  </script>
-</body>
-</html>
+  });
+</script>
+
+@endsection
+

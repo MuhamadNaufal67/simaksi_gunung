@@ -185,7 +185,7 @@
             <!-- RIGHT -->
             <div class="navbar-right">
                 @auth
-                    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    <form action="{{ route('logout') }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin logout?')">
                         @csrf
                         <button type="submit" class="btn-login logout">Logout</button>
                     </form>

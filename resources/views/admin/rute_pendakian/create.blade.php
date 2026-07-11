@@ -7,7 +7,7 @@
     <h2>➕ Tambah Rute Pendakian</h2>
     <a href="{{ route('admin.rute-pendakian.index') }}" class="btn btn-secondary mb-3">⬅️ Kembali</a>
 
-    <form action="{{ route('admin.rute-pendakian.store') }}" method="POST" class="card p-4 shadow-sm">
+    <form action="{{ route('admin.rute-pendakian.store') }}" method="POST" class="card p-4 shadow-sm" data-confirm-message="Simpan data rute pendakian ini?" data-confirm-title="Konfirmasi Simpan" data-confirm-ok="Ya, simpan">
         @csrf
 
         <div class="mb-3">
@@ -25,7 +25,7 @@
 
         <div class="mb-3">
             <label for="nama_rute" class="form-label fw-bold">Nama Rute</label>
-            <input type="text" name="nama_rute" id="nama_rute" class="form-control" value="{{ old('nama_rute') }}" required>
+            <input type="text" name="nama_rute" id="nama_rute" class="form-control" value="{{ old('nama_rute') }}" data-validate="name" minlength="3" maxlength="100" required>
             @error('nama_rute') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
@@ -37,7 +37,7 @@
 
         <div class="mb-3">
             <label for="harga" class="form-label fw-bold">Harga (Rp)</label>
-            <input type="number" name="harga" id="harga" class="form-control" value="{{ old('harga') }}" required>
+            <input type="number" name="harga" id="harga" class="form-control" value="{{ old('harga') }}" min="0" data-validate="price" required>
             @error('harga') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 

@@ -48,12 +48,12 @@
                             </td>
                             <td>{{ $user->created_at->format('d/m/Y') }}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal{{ $user->id }}">
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $user->id }}">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;" data-confirm-message="Yakin ingin menghapus user ini?" data-confirm-title="Konfirmasi Hapus" data-confirm-ok="Ya, hapus" data-confirm-icon="warning">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus user ini?')">
+                                    <button class="btn btn-danger btn-sm" type="submit">
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </form>
@@ -66,20 +66,18 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editModalLabel{{ $user->id }}">Edit User</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+                                    <form action="{{ route('admin.users.update', $user->id) }}" method="POST" data-confirm-message="Simpan perubahan user ini?" data-confirm-title="Konfirmasi Perubahan" data-confirm-ok="Ya, simpan">
                                         @csrf
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="nama_lengkap{{ $user->id }}">Nama Lengkap</label>
-                                                <input type="text" class="form-control" id="nama_lengkap{{ $user->id }}" name="nama_lengkap" value="{{ $user->nama_lengkap }}" required>
+                                                <input type="text" class="form-control" id="nama_lengkap{{ $user->id }}" name="nama_lengkap" value="{{ $user->nama_lengkap }}" data-validate="name" minlength="3" maxlength="100" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="email{{ $user->id }}">Email</label>
-                                                <input type="email" class="form-control" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" required>
+                                                <input type="email" class="form-control" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" data-validate="email" maxlength="100" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="role{{ $user->id }}">Role</label>
@@ -90,7 +88,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                         </div>
                                     </form>

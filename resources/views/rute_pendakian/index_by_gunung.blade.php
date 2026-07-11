@@ -3,127 +3,64 @@
 @section('title', 'Rute Pendakian - SIMAKSI')
 
 @section('content')
-<style>
-    .rute-container {
-        max-width: 1200px;
-        margin: auto;
-        text-align: center;
-    }
-
-    h1 {
-        color: #104734;
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-    }
-
-    p.subtext {
-        color: #4a7c59;
-        margin-bottom: 40px;
-    }
-
-    .rute-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-    }
-
-    .rute-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        overflow: hidden;
-        transition: 0.3s;
-        text-align: left;
-    }
-
-    .rute-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 30px rgba(16,71,52,0.2);
-    }
-
-    .rute-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-
-    .rute-info {
-        padding: 20px;
-    }
-
-    .rute-info h3 {
-        color: #104734;
-        margin-bottom: 10px;
-    }
-
-    .rute-info p {
-        color: #555;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin-bottom: 8px;
-    }
-
-    .rute-badge {
-        background: #28a745;
-        color: white;
-        font-size: 0.8rem;
-        font-weight: 600;
-        padding: 5px 12px;
-        border-radius: 50px;
-        display: inline-block;
-        margin-bottom: 10px;
-    }
-
-    .btn-daftar {
-        display: inline-block;
-        background: linear-gradient(135deg, #1e7e34, #20c997);
-        color: white;
-        text-decoration: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        font-weight: 600;
-        font-size: 0.9rem;
-    }
-
-    .btn-daftar:hover {
-        background: linear-gradient(135deg, #20c997, #1e7e34);
-        transform: translateY(-2px);
-        color: #fff;
-    }
-</style>
-
-<div class="rute-container">
-    <h1>🥾 Rute Pendakian {{ $gunung->nama_gunung }}</h1>
-    <p class="subtext">
-        Pilih jalur resmi pendakian di Gunung {{ $gunung->nama_gunung }} untuk keamanan dan kenyamanan pendakianmu.
-    </p>
+<section class="container py-4 py-md-5">
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h2 fw-bold mb-2">🥾 Rute Pendakian {{ $gunung->nama_gunung }}</h1>
+            <p class="text-muted mb-0">Pilih jalur resmi pendakian untuk keamanan dan kenyamanan.</p>
+        </div>
+    </div>
 
     @if($gunung->latitude && $gunung->longitude)
-        <div class="map-section" style="margin: 40px 0; text-align: center;">
-            <h2 style="color: #104734; margin-bottom: 20px;">📍 Lokasi Gunung {{ $gunung->nama_gunung }} di Peta</h2>
-            <div id="map" style="width:100%; max-width: 800px; height:400px; border:1px solid #ddd; border-radius:10px; margin: 0 auto;"></div>
+        <div class="card-simaksi p-4 mb-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="fa fa-map" style="color:#15803d;"></i>
+                <h2 class="h5 fw-bold mb-0">📍 Lokasi Gunung {{ $gunung->nama_gunung }} di Peta</h2>
+            </div>
+            <div id="map" class="w-100" style="height:420px; border-radius:16px; border:1px solid rgba(15,23,42,.12);"></div>
         </div>
     @endif
 
-    <div class="rute-grid">
+    <div class="row g-3">
         @forelse($rutes as $r)
-        <div class="rute-card">
-            <img src="{{ asset('images/rute/default.jpg') }}" alt="{{ $r->nama_rute }}">
-            <div class="rute-info">
-                <span class="rute-badge">{{ $gunung->nama_gunung }}</span>
-                <h3>{{ $r->nama_rute }}</h3>
-                <p><strong>Harga:</strong> Rp {{ number_format($r->harga, 0, ',', '.') }}</p>
-                <p><strong>Deskripsi:</strong> {{ $r->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card-simaksi overflow-hidden h-100">
+                    <div style="height:200px; background:#f1f5f9;">
+                        <img src="{{ asset('images/rute/default.jpg') }}" alt="{{ $r->nama_rute }}" class="w-100 h-100" style="object-fit:cover;">
+                    </div>
+                    <div class="p-4">
+                        <span class="badge badge-simaksi bg-success text-white px-3 py-2 fw-bold mb-2 d-inline-flex align-items-center">
+                            <i class="fa fa-mountain me-1"></i>{{ $gunung->nama_gunung }}
+                        </span>
+                        <h2 class="h5 fw-bold mb-2">{{ $r->nama_rute }}</h2>
 
-                <a href="{{ route('pendaftaran.create.with.params', ['gunung_id' => $gunung->id_gunung, 'rute_id' => $r->id_rute]) }}" class="btn-daftar">📝 Daftar SIMAKSI</a>
+                        <div class="text-muted" style="line-height:1.7; font-size:.95rem;">
+                            <div class="d-flex align-items-start gap-2 mb-1">
+                                <i class="fa fa-tag" style="color:#15803d; margin-top:2px;"></i>
+                                <span><strong>Harga:</strong> Rp {{ number_format($r->harga, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fa fa-info-circle" style="color:#15803d; margin-top:2px;"></i>
+                                <span><strong>Deskripsi:</strong> {{ $r->deskripsi ?? 'Tidak ada deskripsi.' }}</span>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('pendaftaran.create.with.params', ['gunung_id' => $gunung->id_gunung, 'rute_id' => $r->id_rute]) }}" class="btn btn-simaksi-primary w-100 fw-bold rounded-4 mt-3">
+                            <i class="fa fa-file-pen me-2"></i> Daftar SIMAKSI
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
         @empty
-        <p>Tidak ada data rute pendakian untuk gunung ini.</p>
+            <div class="col-12">
+                <div class="card-simaksi p-4 text-center">
+                    <div class="fw-bold mb-1">Tidak ada data rute pendakian</div>
+                    <div class="text-muted" style="font-size:.95rem;">Coba pilih gunung lainnya.</div>
+                </div>
+            </div>
         @endforelse
     </div>
-</div>
+</section>
 @endsection
 
 @push('scripts')

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- SweetAlert2 -->
@@ -345,6 +345,11 @@
             border-color:var(--admin-accent);
             box-shadow:0 0 0 3px var(--admin-accent-soft);
         }
+        .form-control.is-invalid, .form-select.is-invalid{
+            border-color:#dc2626;
+            box-shadow:0 0 0 3px rgba(220,38,38,.12);
+        }
+        .invalid-feedback.dynamic-feedback{ display:block; font-size:.82rem; margin-top:.35rem; }
         textarea.form-control{ min-height:auto; }
 
         .alert{
@@ -478,7 +483,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" data-confirm-message="Yakin ingin logout dari panel admin?" data-confirm-title="Konfirmasi Logout" data-confirm-ok="Ya, logout">
                     @csrf
                     <button type="submit" class="btn w-100 text-start">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
@@ -539,7 +544,7 @@
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
@@ -584,6 +589,156 @@
             if (backdrop){
                 backdrop.addEventListener('click', closeSidebar);
             }
+        })();
+    </script>
+    <script>
+        (function () {
+            function normalizeSpaces(value) {
+                return String(value || '').replace(/\s+/g, ' ').trim();
+            }
+
+            function setInvalid(el, message) {
+                if (!el) return;
+                el.classList.add('is-invalid');
+                el.setAttribute('aria-invalid', 'true');
+                el.setCustomValidity(message || 'Input tidak valid');
+                let feedback = el.parentElement ? el.parentElement.querySelector(`.dynamic-feedback[data-for="${el.name || el.id || ''}"]`) : null;
+                if (!feedback) {
+                    feedback = document.createElement('div');
+                    feedback.className = 'invalid-feedback dynamic-feedback';
+                    feedback.dataset.for = el.name || el.id || '';
+                    el.insertAdjacentElement('afterend', feedback);
+                }
+                feedback.textContent = message || 'Input tidak valid';
+            }
+
+            function clearInvalid(el) {
+                if (!el) return;
+                el.classList.remove('is-invalid');
+                el.removeAttribute('aria-invalid');
+                el.setCustomValidity('');
+                const feedback = el.parentElement ? el.parentElement.querySelector(`.dynamic-feedback[data-for="${el.name || el.id || ''}"]`) : null;
+                if (feedback) feedback.remove();
+            }
+
+            function validateName(el) {
+                const raw = String(el.value || '');
+                const cleaned = raw.replace(/[^A-Za-z0-9\s'.,-]/g, '').replace(/\s{2,}/g, ' ');
+                if (cleaned !== raw) el.value = cleaned;
+                const value = normalizeSpaces(el.value);
+                el.value = value;
+                if (!value) return setInvalid(el, 'Field ini wajib diisi.'), false;
+                if (value.length < 3) return setInvalid(el, 'Minimal 3 karakter.'), false;
+                if (/^\d+$/.test(value)) return setInvalid(el, 'Tidak boleh hanya angka.'), false;
+                clearInvalid(el);
+                return true;
+            }
+
+            function validateEmail(el) {
+                const value = String(el.value || '').replace(/\s+/g, '');
+                el.value = value;
+                if (!value) return setInvalid(el, 'Email wajib diisi.'), false;
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return setInvalid(el, 'Format email tidak valid.'), false;
+                clearInvalid(el);
+                return true;
+            }
+
+            function validateNumber(el, allowZero = true, max = null) {
+                const digits = String(el.value || '').replace(/[^\d.-]/g, '');
+                if (digits !== String(el.value || '')) el.value = digits;
+                const value = Number(el.value);
+                if (el.value === '') return setInvalid(el, 'Field ini wajib diisi.'), false;
+                if (!Number.isFinite(value)) return setInvalid(el, 'Nilai harus berupa angka.'), false;
+                if (value < 0) return setInvalid(el, 'Nilai tidak boleh negatif.'), false;
+                if (!allowZero && value < 1) return setInvalid(el, 'Nilai minimal 1.'), false;
+                if (max !== null && value > max) return setInvalid(el, `Nilai maksimal ${max}.`), false;
+                clearInvalid(el);
+                return true;
+            }
+
+            function validateFile(el) {
+                if (!el.files || !el.files.length) return clearInvalid(el), true;
+                const allowed = (el.dataset.allowedExt || '').split(',').map(v => v.trim().toLowerCase()).filter(Boolean);
+                if (!allowed.length) return clearInvalid(el), true;
+                const ext = (el.files[0].name.split('.').pop() || '').toLowerCase();
+                if (!allowed.includes(ext)) return setInvalid(el, `File harus berformat: ${allowed.join(', ')}.`), false;
+                clearInvalid(el);
+                return true;
+            }
+
+            function validateField(el) {
+                switch (el.dataset.validate) {
+                    case 'name': return validateName(el);
+                    case 'email': return validateEmail(el);
+                    case 'price': return validateNumber(el, true, null);
+                    case 'quantity': return validateNumber(el, false, null);
+                    case 'age': return validateNumber(el, false, 100);
+                    case 'file': return validateFile(el);
+                    default: return true;
+                }
+            }
+
+            document.addEventListener('input', function (e) {
+                const el = e.target;
+                if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)) return;
+                if (el.dataset.validate) validateField(el);
+            });
+
+            document.addEventListener('change', function (e) {
+                const el = e.target;
+                if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)) return;
+                if (el.dataset.validate) validateField(el);
+            });
+
+            document.addEventListener('input', function (e) {
+                const el = e.target;
+                if (!(el instanceof HTMLInputElement)) return;
+                if (el.type === 'search') {
+                    el.value = normalizeSpaces(String(el.value || '').replace(/[<>{}[\]^`;$\\|]/g, ''));
+                }
+            });
+
+            document.addEventListener('submit', function (e) {
+                const form = e.target;
+                if (!(form instanceof HTMLFormElement)) return;
+
+                let invalid = false;
+                form.querySelectorAll('[data-validate]').forEach((field) => {
+                    if (!validateField(field) && !invalid) {
+                        invalid = true;
+                        field.focus();
+                    }
+                });
+                if (invalid) {
+                    e.preventDefault();
+                    Swal.fire({ icon: 'warning', title: 'Periksa kembali input yang masih tidak valid.', confirmButtonColor: '#28a745' });
+                    return;
+                }
+
+                if (form.dataset.confirmed === 'true') {
+                    delete form.dataset.confirmed;
+                    return;
+                }
+
+                const confirmMessage = form.dataset.confirmMessage;
+                if (!confirmMessage) return;
+
+                e.preventDefault();
+                Swal.fire({
+                    icon: form.dataset.confirmIcon || 'question',
+                    title: form.dataset.confirmTitle || 'Konfirmasi',
+                    text: confirmMessage,
+                    showCancelButton: true,
+                    confirmButtonText: form.dataset.confirmOk || 'Ya, lanjutkan',
+                    cancelButtonText: form.dataset.confirmCancel || 'Batal',
+                    confirmButtonColor: '#28a745'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.dataset.confirmed = 'true';
+                        form.requestSubmit ? form.requestSubmit() : form.submit();
+                    }
+                });
+            }, true);
         })();
     </script>
 

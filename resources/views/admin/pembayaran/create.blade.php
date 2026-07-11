@@ -7,7 +7,7 @@
     <h2>➕ Tambah Pembayaran</h2>
     <a href="{{ route('admin.pembayaran.index') }}" class="btn btn-secondary mb-3">⬅️ Kembali</a>
 
-    <form action="{{ route('admin.pembayaran.store') }}" method="POST" class="card p-4 shadow-sm">
+    <form action="{{ route('admin.pembayaran.store') }}" method="POST" class="card p-4 shadow-sm" data-confirm-message="Simpan data pembayaran ini?" data-confirm-title="Konfirmasi Simpan" data-confirm-ok="Ya, simpan">
         @csrf
 
         <div class="mb-3">
@@ -36,7 +36,7 @@
 
         <div class="mb-3">
             <label for="jumlah_bayar" class="form-label fw-bold">Jumlah Bayar (Rp)</label>
-            <input type="number" name="jumlah_bayar" id="jumlah_bayar" class="form-control" value="{{ old('jumlah_bayar') }}" required>
+            <input type="number" name="jumlah_bayar" id="jumlah_bayar" class="form-control" value="{{ old('jumlah_bayar') }}" min="0" data-validate="price" required>
             @error('jumlah_bayar') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 

@@ -92,7 +92,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Aksi</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.pendaftaran.update-status', $pendaftaran) }}" method="POST">
+                    <form action="{{ route('admin.pendaftaran.update-status', $pendaftaran) }}" method="POST" data-confirm-message="Simpan perubahan status pendaftaran ini?" data-confirm-title="Konfirmasi Status" data-confirm-ok="Ya, simpan">
                         @csrf
                         @method('PATCH')
                         <div class="form-group mb-3">

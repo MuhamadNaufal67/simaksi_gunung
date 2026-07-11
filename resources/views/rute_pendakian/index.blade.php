@@ -3,97 +3,52 @@
 @section('title', 'Rute Pendakian Resmi - SIMAKSI')
 
 @section('content')
-<style>
-    .rute-container {
-        max-width: 1200px;
-        margin: auto;
-        text-align: center;
-    }
-
-    h1 {
-        color: #104734;
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-    }
-
-    p.subtext {
-        color: #4a7c59;
-        margin-bottom: 40px;
-    }
-
-    .rute-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-    }
-
-    .rute-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        overflow: hidden;
-        transition: 0.3s;
-        text-align: left;
-    }
-
-    .rute-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 30px rgba(16,71,52,0.2);
-    }
-
-    .rute-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-
-    .rute-info {
-        padding: 20px;
-    }
-
-    .rute-info h3 {
-        color: #104734;
-        margin-bottom: 10px;
-    }
-
-    .rute-info p {
-        color: #555;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin-bottom: 8px;
-    }
-
-    .rute-badge {
-        background: #28a745;
-        color: white;
-        font-size: 0.8rem;
-        font-weight: 600;
-        padding: 5px 12px;
-        border-radius: 50px;
-        display: inline-block;
-        margin-bottom: 10px;
-    }
-</style>
-
-<div class="rute-container">
-    <h1>🥾 Rute Pendakian Resmi</h1>
-    <p class="subtext">Gunakan jalur pendakian resmi untuk keamanan dan kelestarian alam. Berikut beberapa rute pendakian resmi dari berbagai gunung di Indonesia.</p>
-
-    <div class="rute-grid">
-        @forelse($rutes as $r)
-        <div class="rute-card">
-            {{-- Jika kamu ingin tampilkan gambar, nanti bisa tambah kolom "gambar" di database --}}
-            <img src="{{ asset('images/rute/default.jpg') }}" alt="{{ $r->nama_rute }}">
-            <div class="rute-info">
-                <span class="rute-badge">{{ $r->gunung->nama_gunung ?? 'Gunung Tidak Diketahui' }}</span>
-                <h3>{{ $r->nama_rute }}</h3>
-                <p><strong>Harga:</strong> Rp {{ number_format($r->harga, 0, ',', '.') }}</p>
-                <p><strong>Deskripsi:</strong> {{ $r->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
-            </div>
+<section class="container py-4 py-md-5">
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h2 fw-bold mb-2">🥾 Rute Pendakian Resmi</h1>
+            <p class="text-muted mb-0">Jalur pendakian resmi untuk keamanan dan kelestarian alam.</p>
         </div>
-        @empty
-        <p>Tidak ada data rute pendakian tersedia.</p>
-        @endforelse
     </div>
-</div>
+
+    @if($rutes->isEmpty())
+        <div class="card-simaksi p-4 text-center">
+            <div class="fw-bold mb-1">Tidak ada data rute pendakian</div>
+            <div class="text-muted" style="font-size:.95rem;">Coba kunjungi gunung lainnya.</div>
+        </div>
+    @else
+        <div class="row g-3">
+            @foreach($rutes as $r)
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card-simaksi overflow-hidden h-100">
+                        <div style="height:200px; background:#f1f5f9;">
+                            <img src="{{ asset('images/rute/default.jpg') }}" alt="{{ $r->nama_rute }}" class="w-100 h-100" style="object-fit:cover;">
+                        </div>
+
+                        <div class="p-4">
+                            <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                <span class="badge badge-simaksi bg-success text-white px-3 py-2 fw-bold">
+                                    <i class="fa fa-mountain me-1"></i>{{ $r->gunung->nama_gunung ?? 'Gunung Tidak Diketahui' }}
+                                </span>
+                            </div>
+
+                            <h2 class="h5 fw-bold mb-2">{{ $r->nama_rute }}</h2>
+
+                            <div class="text-muted" style="line-height:1.7; font-size:.95rem;">
+                                <div class="d-flex align-items-start gap-2 mb-1">
+                                    <i class="fa fa-tag" style="color:#15803d; margin-top:2px;"></i>
+                                    <span><strong>Harga:</strong> Rp {{ number_format($r->harga, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="fa fa-info-circle" style="color:#15803d; margin-top:2px;"></i>
+                                    <span><strong>Deskripsi:</strong> {{ $r->deskripsi ?? 'Tidak ada deskripsi.' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</section>
 @endsection

@@ -1,17 +1,11 @@
-# TODO - Refactor Tampilan SIMAKSI Gunung (Bootstrap 5, UI/UX Modern)
+# TODO - Fase User (Redesign halaman pendaftaran & pembayaran)
 
-## Tahap 1 (Prioritas: Design system + Layout + Dashboard)
-- [x] 1. Bangun design system konsisten (palette hijau, netral abu, putih).
-- [ ] 2. Rapikan wrapper layout utama: navbar, main container, footer. Hilangkan/kurangi CSS inline yang bertabrakan.
-- [ ] 3. Rapikan admin layout: sidebar/navbar/footer agar konsisten dengan design system.
+- [ ] 1) Redesign `resources/views/pendaftaran/index.blade.php` (hero/page heading, breadcrumb, summary cards, table modern, badges, empty state)
+- [ ] 2) Redesign `resources/views/pendaftaran/create.blade.php` jadi wizard modern (6-7 section cards) tanpa mengubah JS/id/name/fetch/event listener
+- [ ] 3) Redesign `resources/views/pendaftaran/_anggota_form.blade.php` tampilan anggota pakai card modern (tanpa mengubah name field)
+- [ ] 4) Redesign `resources/views/pendaftaran/edit.blade.php` jadi detail modern dengan section cards + visual timeline
+- [ ] 5) Redesign `resources/views/pendaftaran/bayar.blade.php` jadi invoice modern (tetap extend layouts.main, status badge, VA/Midtrans tetap via script & logic identik)
 
-- [ ] 4. Standarkan typography (font-size, font-weight, line-height) dengan scale yang konsisten.
-- [ ] 5. Standarkan spacing berbasis sistem 8px (8/16/24/32) pada komponen yang tersentuh.
-- [ ] 6. Perbaiki button variants: primary/secondary/success/danger + hover/focus.
-- [ ] 7. Buat komponen dashboard card statistik bergaya SaaS: grid responsif, shadow/border konsisten.
-- [ ] 8. Standarkan card, badge/status, table, form, modal, alert (minimal yang muncul di dashboard).
-- [ ] 9. Pastikan responsive desktop/tablet/mobile (navbar tidak tabrakan; grid tidak overflow).
-
-## Tahap 2 (CRUD konsisten)
-- [ ] Terapkan style komponen yang sama ke halaman CRUD (gunung, rute, pendaftaran, kebutuhan alat, pembayaran, dll).
+- [ ] 6) Pengecekan akhir: tidak ada syntax error Blade, tidak ada route/controller/query berubah, tidak ada JS/fetch/midtrans callback/id/name berubah
+- [ ] 7) Rapikan output final sesuai format: daftar file diubah, ringkasan perubahan, checklist business logic/Midtrans/Google Maps/form payload
 

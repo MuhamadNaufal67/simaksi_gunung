@@ -3,27 +3,28 @@
 @section('title', 'Manajemen Pendaftaran - Admin')
 
 @section('content')
-<div class="container-fluid py-4">
-    <!-- Header Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body bg-gradient-primary text-white rounded-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h1 class="h3 mb-1 fw-bold">📋 Manajemen Pendaftaran</h1>
-                            <p class="mb-0 opacity-75">Kelola dan setujui pendaftaran pendakian</p>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-light btn-lg rounded-pill shadow-sm" onclick="window.location.reload()">
-                                <i class="fas fa-sync-alt me-2"></i>Refresh
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<div class="admin-page">
+
+    {{-- Breadcrumb + Page heading (tanpa ubah route/controller) --}}
+    <div class="mb-4">
+        <div class="breadcrumb-simaksi mb-2">
+            <span class="crumb-trail">Admin / Pendaftaran</span>
+            <span class="crumb-title">Manajemen Pendaftaran</span>
+        </div>
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+                <h1 class="h3 mb-1 fw-bold">📋 Manajemen Pendaftaran</h1>
+                <p class="mb-0 text-muted">Kelola dan setujui pendaftaran pendakian</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary" type="button" onclick="window.location.reload()">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
             </div>
         </div>
     </div>
+
 
     <!-- Success Alert -->
     @if(session('success'))
@@ -214,6 +215,7 @@
                                                     @method('PATCH')
                                                     <select name="status"
                                                             class="form-select form-select-sm d-inline-block"
+                                                            data-current-status="{{ $pendaftaran->status }}"
                                                             style="width: auto; min-width: 120px;"
                                                             onchange="confirmStatusChange(this, {{ $pendaftaran->id_pendaftaran }})">
                                                         <option value="menunggu" {{ $pendaftaran->status == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
@@ -314,7 +316,7 @@
 <script>
 function confirmStatusChange(selectElement, id) {
     const newStatus = selectElement.value;
-    const currentStatus = selectElement.querySelector('option[selected]').value;
+    const currentStatus = selectElement.dataset.currentStatus || selectElement.querySelector('option[selected]')?.value;
 
     if (newStatus === currentStatus) {
         return; // No change
@@ -338,12 +340,22 @@ function confirmStatusChange(selectElement, id) {
             break;
     }
 
-    if (confirm(confirmMessage)) {
-        selectElement.form.submit();
-    } else {
-        // Reset to original value
-        selectElement.value = currentStatus;
-    }
+    Swal.fire({
+        icon: newStatus === 'ditolak' ? 'warning' : 'question',
+        title: `Ubah status menjadi ${statusText}?`,
+        text: confirmMessage,
+        showCancelButton: true,
+        confirmButtonText: 'Ya, lanjutkan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#28a745'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            selectElement.dataset.currentStatus = newStatus;
+            selectElement.form.submit();
+        } else {
+            selectElement.value = currentStatus;
+        }
+    });
 }
 
 // Initialize DataTable if available
