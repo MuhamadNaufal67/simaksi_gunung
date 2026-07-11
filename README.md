@@ -1,61 +1,202 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SIMAKSI Gunung
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-12-red?style=for-the-badge&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php)
+![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap)
+![Midtrans](https://img.shields.io/badge/Midtrans-Sandbox-00AEEF?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Portfolio-success?style=for-the-badge)
 
-## About Laravel
+## Deskripsi Singkat
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+SIMAKSI Gunung adalah aplikasi berbasis Laravel yang dirancang untuk membantu proses pengelolaan Surat Izin Masuk Kawasan Konservasi bagi kegiatan pendakian gunung. Sistem ini mendukung alur pendaftaran pendaki, manajemen data gunung dan rute pendakian, dashboard admin dan user, pembayaran Midtrans sandbox, export PDF, serta tampilan responsif untuk kebutuhan presentasi portfolio dan pengembangan lanjutan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Preview / Screenshot
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Tempatkan screenshot aplikasi pada folder `docs/images/` dengan nama file berikut:
 
-## Learning Laravel
+![Landing Page](docs/images/landing-page.png)
+![Dashboard User](docs/images/dashboard-user.png)
+![Form Pendaftaran](docs/images/form-pendaftaran.png)
+![Riwayat Pendaftaran](docs/images/riwayat-pendaftaran.png)
+![Admin Dashboard](docs/images/admin-dashboard.png)
+![Admin Gunung](docs/images/admin-gunung.png)
+![Midtrans Payment](docs/images/midtrans-payment.png)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Jika file belum tersedia, lihat panduan di [docs/images/README.md](docs/images/README.md).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Fitur Utama
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Landing page modern untuk pengenalan aplikasi.
+- Authentication user dan admin.
+- Dashboard user untuk melihat status dan riwayat pendaftaran.
+- Dashboard admin untuk monitoring data inti aplikasi.
+- Manajemen data gunung.
+- Manajemen rute pendakian.
+- Form pendaftaran SIMAKSI berbasis web.
+- Upload dokumen identitas pendaki.
+- Pembayaran menggunakan Midtrans sandbox.
+- Export dokumen/riwayat dalam format PDF.
+- Tampilan responsif untuk desktop dan mobile.
 
-## Laravel Sponsors
+## Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Backend: Laravel 12
+- Bahasa pemrograman: PHP 8.2+
+- Database: MySQL
+- Frontend: Blade, Bootstrap 5, JavaScript
+- Build tool: Vite
+- PDF export: `barryvdh/laravel-dompdf`
+- Payment gateway: `midtrans/midtrans-php`
+- Social login: Laravel Socialite
 
-### Premium Partners
+## Struktur Fitur User
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Registrasi dan login akun.
+- Melihat landing page, panduan, daftar gunung, dan rute pendakian.
+- Mengisi formulir pendaftaran SIMAKSI.
+- Upload identitas/dokumen pendukung.
+- Melihat ringkasan biaya dan status pembayaran.
+- Melakukan pembayaran melalui Midtrans sandbox.
+- Melihat riwayat pendaftaran.
+- Mengunduh/cetak dokumen PDF ketika status sudah memenuhi syarat.
 
-## Contributing
+## Struktur Fitur Admin
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Login ke dashboard admin.
+- Melihat ringkasan data utama aplikasi.
+- Mengelola data gunung.
+- Mengelola data rute pendakian.
+- Meninjau data pendaftaran pengguna.
+- Memantau status pembayaran dan status pendaftaran.
+- Mengelola data pendukung yang tampil pada panel administrasi.
 
-## Code of Conduct
+## Integrasi Pihak Ketiga
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Midtrans Sandbox untuk simulasi pembayaran.
+- Laravel DOMPDF untuk export PDF.
+- Google OAuth melalui Socialite.
+- Google Maps API untuk dukungan lokasi/peta pada fitur tertentu.
 
-## Security Vulnerabilities
+Catatan:
+Beberapa integrasi lanjutan masih bersifat pengembangan bertahap dan dirangkum pada bagian roadmap.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Instalasi Lokal
 
-## License
+1. Clone repository.
+2. Masuk ke folder project.
+3. Install dependency PHP:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+composer install
+```
+
+4. Install dependency frontend:
+
+```bash
+npm install
+```
+
+5. Salin file environment:
+
+```bash
+cp .env.example .env
+```
+
+Untuk Windows PowerShell dapat menggunakan:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+6. Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+## Konfigurasi `.env`
+
+Sesuaikan nilai penting berikut pada file `.env`:
+
+- `APP_NAME`, `APP_URL`, dan `APP_DEBUG`
+- `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+- `MIDTRANS_MERCHANT_ID`, `MIDTRANS_CLIENT_KEY`, `MIDTRANS_SERVER_KEY`
+- `GOOGLE_MAPS_KEY`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`
+- `WEBHOOK_SECRET`, `INTEGRATION_TOKEN`
+- `PEMINJAMAN_API_URL`, `SIMAKSI_WEBHOOK_URL`, `SIMAKSI_API_TOKEN`
+
+Gunakan file `.env.example` sebagai template aman tanpa secret asli.
+
+## Menjalankan Migration dan Seeder
+
+Jalankan perintah berikut:
+
+```bash
+php artisan migrate --seed
+```
+
+Jika ingin menjalankan seeder tertentu secara manual:
+
+```bash
+php artisan db:seed --class=AdminSeeder
+php artisan db:seed --class=UserSeeder
+```
+
+## Menjalankan Aplikasi
+
+Jalankan backend Laravel:
+
+```bash
+php artisan serve
+```
+
+Jalankan Vite untuk asset frontend:
+
+```bash
+npm run dev
+```
+
+Setelah itu buka:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Akun Demo Seeder
+
+Beberapa akun demo ditemukan dari seeder yang ada di repository:
+
+- Admin: `admin@simaksi.com` / `admin123`
+- User: `user@simaksi.com` / `user123`
+- Admin tambahan: `admin@gmail.com` / `admin123`
+
+Catatan:
+Gunakan akun demo ini hanya untuk pengujian lokal atau kebutuhan presentasi portfolio.
+
+## Roadmap
+
+- [x] Landing page
+- [x] Authentication
+- [x] Dashboard user
+- [x] Dashboard admin
+- [x] Manajemen gunung
+- [x] Manajemen rute pendakian
+- [x] Pendaftaran SIMAKSI
+- [x] Upload identitas
+- [x] Midtrans sandbox payment
+- [x] Export PDF
+- [x] Responsive UI redesign
+- [ ] Integrasi sistem peminjaman alat
+- [ ] Community review service
+- [ ] Deployment production
+
+## Status Project
+
+Project ini berada pada status `portfolio-ready development build`. Fitur inti untuk demonstrasi produk Laravel sudah tersedia, sementara beberapa integrasi lanjutan masih berada dalam tahap roadmap dan penyempurnaan.
+
+## Author
+
+Muhamad Naufal Nazih  
+Portfolio project untuk kebutuhan magang dan pengembangan kemampuan full-stack Laravel.
