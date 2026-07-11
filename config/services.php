@@ -36,19 +36,20 @@ return [
     ],
 
     'google_maps' => [
-        'key' => env('GOOGLE_MAPS_KEY', 'AIzaSyBuIGpd88y0f6afnqqdPyr7EH9SCvutwzs'),
+        'key' => env('GOOGLE_MAPS_KEY'),
     ],
 
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI', 'http://localhost:8000/auth/google/callback'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/auth/google/callback'),
     ],
 
     'peminjaman_api' => [
-        'url' => env('PEMINJAMAN_API_URL', 'http://127.0.0.1:8001/api'),
-        'webhook_secret' => env('WEBHOOK_SECRET', 'your_secure_webhook_secret_here'),
-        'simaksi_webhook_url' => env('SIMAKSI_WEBHOOK_URL', 'http://127.0.0.1:8000/api/webhooks/peminjaman-status'),
+        'url' => rtrim((string) env('PEMINJAMAN_API_URL', ''), '/'),
+        'base_url' => rtrim((string) env('PEMINJAMAN_BASE_URL', ''), '/'),
+        'webhook_secret' => env('WEBHOOK_SECRET'),
+        'simaksi_webhook_url' => env('SIMAKSI_WEBHOOK_URL', rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/api/webhooks/peminjaman-status'),
         'simaksi_api_token' => env('SIMAKSI_API_TOKEN', null),
     ],
 

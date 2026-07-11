@@ -30,7 +30,7 @@ class PeminjamanController extends Controller
      */
     public function verify($id)
     {
-        $url = config('services.peminjaman_api.url', 'http://127.0.0.1:8001') . '/admin/peminjaman/' . $id;
+        $url = rtrim((string) config('services.peminjaman_api.base_url'), '/') . '/admin/peminjaman/' . $id;
         return redirect()->away($url);
     }
 

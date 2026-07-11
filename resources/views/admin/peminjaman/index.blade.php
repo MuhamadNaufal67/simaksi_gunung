@@ -15,7 +15,7 @@
                             <p class="mb-0 opacity-75">Pantau status peminjaman alat pendakian dari Sistem Peminjaman Alat</p>
                         </div>
                         <div class="d-flex gap-2">
-                            <a href="{{ config('services.peminjaman_api.url', 'http://127.0.0.1:8001') }}/admin/login" target="_blank" class="btn btn-light btn-lg rounded-pill shadow-sm">
+                            <a href="{{ rtrim((string) config('services.peminjaman_api.base_url'), '/') }}/admin/login" target="_blank" class="btn btn-light btn-lg rounded-pill shadow-sm">
                                 <i class="fas fa-external-link-alt me-2"></i>Buka Sistem Peminjaman
                             </a>
                             <button class="btn btn-outline-light btn-lg rounded-pill shadow-sm" onclick="window.location.reload()">
@@ -192,7 +192,7 @@
                                                         onclick="showDetailModal({{ $peminjaman->id }})">
                                                     <i class="fas fa-eye me-1"></i>Lihat
                                                 </button>
-                                                <a href="{{ config('services.peminjaman_api.url', 'http://127.0.0.1:8001') }}/admin/peminjaman/{{ $peminjaman->id }}" target="_blank" class="btn btn-primary btn-sm rounded-pill px-3">
+                                                <a href="{{ rtrim((string) config('services.peminjaman_api.base_url'), '/') }}/admin/peminjaman/{{ $peminjaman->id }}" target="_blank" class="btn btn-primary btn-sm rounded-pill px-3">
                                                     <i class="fas fa-external-link-alt me-1"></i>Verifikasi
                                                 </a>
                                             </div>

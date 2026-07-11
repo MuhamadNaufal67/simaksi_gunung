@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 🔹 FETCH DAFTAR ALAT PEMINJAMAN
     // ==========================================================
     function loadAlatPeminjaman() {
-        fetch('http://localhost:8001/api/alats')
+        fetch(@json(rtrim((string) config('services.peminjaman_api.url'), '/') . '/alats'))
             .then(res => {
                 if (!res.ok) throw new Error('Gagal memuat daftar alat');
                 return res.json();

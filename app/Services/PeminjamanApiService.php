@@ -12,7 +12,7 @@ class PeminjamanApiService
 
     public function __construct()
     {
-        $this->baseUrl = config('services.peminjaman_api.url', 'http://127.0.0.1:8001/api');
+        $this->baseUrl = rtrim((string) config('services.peminjaman_api.url'), '/');
     }
 
     /**

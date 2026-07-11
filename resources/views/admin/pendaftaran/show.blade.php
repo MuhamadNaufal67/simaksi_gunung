@@ -115,7 +115,7 @@
 
 @push('scripts')
     @if($pendaftaran->gunung && $pendaftaran->gunung->latitude && $pendaftaran->gunung->longitude)
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') ?? 'AIzaSyBuIGpd88y0f6afnqqdPyr7EH9SCvutwzs' }}&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&callback=initMap" async defer></script>
         <script>
             function initMap() {
                 var lat = parseFloat('{{ $pendaftaran->gunung->latitude }}');

@@ -189,7 +189,7 @@
                 // Ambil detail alat yang dipinjam dari API eksternal
                 $alatDipinjam = [];
                 try {
-                    $response = \Illuminate\Support\Facades\Http::get('http://localhost:8001/api/peminjaman/' . $pendaftaran->peminjaman_id);
+                    $response = \Illuminate\Support\Facades\Http::get(rtrim((string) config('services.peminjaman_api.url'), '/') . '/peminjaman/' . $pendaftaran->peminjaman_id);
                     if ($response->successful()) {
                         $peminjamanData = $response->json();
                         if (isset($peminjamanData['items'])) {
