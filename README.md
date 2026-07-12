@@ -15,7 +15,7 @@ SIMAKSI Gunung adalah aplikasi berbasis Laravel yang dirancang untuk membantu pr
 
 Tempatkan screenshot aplikasi pada folder `docs/images/` dengan nama file berikut:
 
-![Landing Page](docs/images/landing-page.png)
+![Landing Page] <img width="1685" height="862" alt="image" src="https://github.com/user-attachments/assets/613f5c97-4008-4e27-be59-bbc684f06690" />
 ![Dashboard User](docs/images/dashboard-user.png)
 ![Form Pendaftaran](docs/images/form-pendaftaran.png)
 ![Riwayat Pendaftaran](docs/images/riwayat-pendaftaran.png)
