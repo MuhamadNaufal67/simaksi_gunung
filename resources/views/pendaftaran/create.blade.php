@@ -19,7 +19,7 @@
     </div>
 
     <div class="card card-simaksi" style="padding:0;">
-        <form id="formPendaftaran" enctype="multipart/form-data" novalidate>
+        <form id="formPendaftaran" action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" novalidate>
             @csrf
 
             {{-- Preserve existing JS structure: all ids & name fields stay untouched. --}}
@@ -263,6 +263,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const alatContainer = document.getElementById('alatContainer');
     const form = document.getElementById('formPendaftaran');
     const hargaRawInput = document.getElementById('harga_raw');
+    const submitButton = form ? form.querySelector('button[type="submit"]') : null;
+    const submitButtonDefaultHtml = submitButton ? submitButton.innerHTML : '';
+    let isSubmittingPendaftaran = false;
 
     // ==========================================================
     // 🔹 FETCH DAFTAR ALAT PEMINJAMAN
@@ -364,6 +367,175 @@ document.addEventListener("DOMContentLoaded", function () {
         if (totalElement) {
             totalElement.textContent = new Intl.NumberFormat('id-ID').format(totalKeseluruhan);
         }
+    }
+
+    function setSubmitButtonState(isLoading) {
+        if (!submitButton) {
+            return;
+        }
+
+        submitButton.disabled = isLoading;
+        submitButton.innerHTML = isLoading
+            ? '<i class="fa fa-spinner fa-spin me-2"></i>Menyimpan...'
+            : submitButtonDefaultHtml;
+    }
+
+    function launchSnapPayment(snapToken, modalInstance = null) {
+        if (!window.snap || typeof window.snap.pay !== 'function') {
+            alert("Layanan pembayaran tidak tersedia saat ini.");
+            return;
+        }
+
+        if (modalInstance && typeof modalInstance.hide === 'function') {
+            modalInstance.hide();
+        }
+
+        window.snap.pay(snapToken, {
+            onSuccess: function() {
+                alert("Pembayaran berhasil. Silakan tunggu persetujuan admin untuk mencetak formulir SIMAKSI.");
+                window.location.href = "/pendaftaran";
+            },
+            onPending: function() {
+                alert("Pembayaran menunggu konfirmasi.");
+                window.location.href = "/pendaftaran";
+            },
+            onError: function() {
+                alert("Terjadi kesalahan saat pembayaran.");
+            },
+            onClose: function() {
+                alert("Anda menutup popup sebelum pembayaran selesai.");
+            }
+        });
+    }
+
+    function submitPendaftaranViaAjax() {
+        const formData = new FormData(form);
+        const total = parseInt(totalInput.value.replace(/\D/g, '')) || 0;
+
+        if (total <= 0) {
+            alert("Harga pendakian belum tersedia. Silakan pilih rute atau periksa data.");
+            setSubmitButtonState(false);
+            isSubmittingPendaftaran = false;
+            return;
+        }
+
+        fetch(form.action, {
+            method: form.method || 'POST',
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name=\"_token\"]').value,
+                "Accept": "application/json"
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.text().then(text => {
+                    let msg = text || res.statusText || 'Unknown error';
+                    try {
+                        const j = JSON.parse(text);
+                        if (j.message) {
+                            msg = j.message;
+                        } else if (j.errors) {
+                            msg = JSON.stringify(j.errors);
+                        }
+                    } catch (error) {
+                        // Keep raw error text when response is not JSON.
+                    }
+                    throw new Error(res.status + ' - ' + msg);
+                });
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (!(data.success && data.snap_token)) {
+                alert("Gagal membuat transaksi: " + (data.message || "Terjadi kesalahan."));
+                return;
+            }
+
+            let gunungText = "";
+            let ruteText = "";
+
+            if (isManualForm) {
+                gunungText = gunungSelect?.selectedOptions[0]?.text || '';
+                ruteText = ruteSelect?.selectedOptions[0]?.text || '';
+            } else {
+                const gunungInput = document.querySelector('input[name="gunung_id"]');
+                const ruteInput = document.querySelector('input[name="rute_pendakian_id"]');
+
+                if (gunungInput && gunungInput.previousElementSibling) {
+                    gunungText = gunungInput.previousElementSibling.value;
+                }
+                if (ruteInput && ruteInput.previousElementSibling) {
+                    ruteText = ruteInput.previousElementSibling.value;
+                }
+            }
+
+            const biayaSimaksi = parseInt(totalInput.value.replace(/\D/g, '')) || 0;
+            const biayaAlat = parseInt(document.getElementById('totalBiayaAlat').textContent.replace(/\D/g, '')) || 0;
+            const totalKeseluruhan = biayaSimaksi + biayaAlat;
+
+            document.getElementById('modalGunung').textContent = gunungText;
+            document.getElementById('modalRute').textContent = ruteText;
+            document.getElementById('modalTanggal').textContent = tglNaik.value;
+            document.getElementById('modalBiayaSimaksi').textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(biayaSimaksi);
+            document.getElementById('modalTotal').textContent = new Intl.NumberFormat('id-ID').format(totalKeseluruhan);
+
+            const modalBiayaAlatContainer = document.getElementById('modalBiayaAlatContainer');
+            const modalAlatDetail = document.getElementById('modalAlatDetail');
+
+            if (biayaAlat > 0) {
+                modalBiayaAlatContainer.style.display = 'block';
+                document.getElementById('modalBiayaAlat').textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(biayaAlat);
+
+                let alatDetailHtml = '<strong>Alat yang dipinjam:</strong><br>';
+                let hasAlat = false;
+
+                document.querySelectorAll('.alat-input').forEach(input => {
+                    const quantity = parseInt(input.value) || 0;
+                    if (quantity > 0) {
+                        hasAlat = true;
+                        const harga = parseInt(input.getAttribute('data-harga')) || 0;
+                        const namaAlat = input.closest('.card-body').querySelector('.card-title').textContent;
+                        const totalHarga = quantity * harga;
+
+                        alatDetailHtml += `• ${namaAlat} (${quantity}x) - Rp${new Intl.NumberFormat('id-ID').format(totalHarga)}<br>`;
+                    }
+                });
+
+                modalAlatDetail.innerHTML = hasAlat
+                    ? alatDetailHtml
+                    : '<em>Tidak ada alat yang dipinjam</em>';
+            } else {
+                modalBiayaAlatContainer.style.display = 'none';
+                modalAlatDetail.innerHTML = '';
+            }
+
+            const btnBayarSekarang = document.getElementById('btnBayarSekarang');
+            if (btnBayarSekarang) {
+                btnBayarSekarang.onclick = null;
+            }
+
+            if (window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+                const modal = new bootstrap.Modal(document.getElementById('modalPembayaran'));
+                modal.show();
+
+                if (btnBayarSekarang) {
+                    btnBayarSekarang.onclick = function() {
+                        launchSnapPayment(data.snap_token, modal);
+                    };
+                }
+            } else {
+                launchSnapPayment(data.snap_token);
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert("Terjadi kesalahan: " + err.message + "\n(Periksa console/network & storage/logs/laravel.log untuk detail)");
+        })
+        .finally(() => {
+            setSubmitButtonState(false);
+            isSubmittingPendaftaran = false;
+        });
     }
 
     function setFieldError(field, message) {
@@ -721,6 +893,68 @@ document.addEventListener("DOMContentLoaded", function () {
     // 🔹 SUBMIT FORM
     // ==========================================================
     form.addEventListener('submit', function(e) {
+        const canUseEnhancedSubmit =
+            typeof window.fetch === 'function' &&
+            typeof window.FormData === 'function' &&
+            typeof window.Swal !== 'undefined';
+
+        if (!canUseEnhancedSubmit) {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        if (isSubmittingPendaftaran) {
+            return;
+        }
+
+        setSubmitButtonState(true);
+
+        const invalidField = validatePendaftaranForm();
+        if (invalidField) {
+            invalidField.focus();
+            setSubmitButtonState(false);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validasi Gagal',
+                text: invalidField.validationMessage || 'Periksa kembali data yang masih tidak valid.',
+                confirmButtonColor: '#28a745'
+            });
+            return;
+        }
+
+        const total = parseInt(totalInput.value.replace(/\D/g, '')) || 0;
+        if (total <= 0) {
+            alert("Harga pendakian belum tersedia. Silakan pilih rute atau periksa data.");
+            setSubmitButtonState(false);
+            return;
+        }
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Konfirmasi Pendaftaran',
+            text: 'Pastikan data pendakian dan ringkasan biaya sudah benar sebelum melanjutkan.',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, lanjutkan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#28a745'
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                setSubmitButtonState(false);
+                return;
+            }
+
+            isSubmittingPendaftaran = true;
+            submitPendaftaranViaAjax();
+        });
+    }, true);
+
+    form.addEventListener('submit', function(e) {
+        if (!(typeof window.fetch === 'function' && typeof window.FormData === 'function' && typeof window.Swal !== 'undefined')) {
+            return;
+        }
+
         e.preventDefault();
 
         const btn = form.querySelector('button[type="submit"]');
@@ -962,7 +1196,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:12px;">
-                    <button id="btnBayarSekarang" class="btn btn-success w-100" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border:none; padding:16px; border-radius:12px; font-weight:700; font-size:1.1rem; display:flex; align-items:center; justify-content:center; gap:10px; transition:all 0.3s ease;">
+                    <button type="button" id="btnBayarSekarang" class="btn btn-success w-100" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border:none; padding:16px; border-radius:12px; font-weight:700; font-size:1.1rem; display:flex; align-items:center; justify-content:center; gap:10px; transition:all 0.3s ease;">
                         <span style="font-size:1.3rem;">💳</span><span>Bayar Sekarang</span>
                     </button>
                 </div>
