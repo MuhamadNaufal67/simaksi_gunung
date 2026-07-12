@@ -181,28 +181,7 @@ Beberapa akun demo ditemukan dari seeder yang ada di repository:
 Catatan:
 Gunakan akun demo ini hanya untuk pengujian lokal atau kebutuhan presentasi portfolio.
 
-## Roadmap
-
-- [x] Landing page
-- [x] Authentication
-- [x] Dashboard user
-- [x] Dashboard admin
-- [x] Manajemen gunung
-- [x] Manajemen rute pendakian
-- [x] Pendaftaran SIMAKSI
-- [x] Upload identitas
-- [x] Midtrans sandbox payment
-- [x] Export PDF
-- [x] Responsive UI redesign
-- [ ] Integrasi sistem peminjaman alat
-- [ ] Community review service
-- [ ] Deployment production
-
-## Status Project
-
-Project ini berada pada status `portfolio-ready development build`. Fitur inti untuk demonstrasi produk Laravel sudah tersedia, sementara beberapa integrasi lanjutan masih berada dalam tahap roadmap dan penyempurnaan.
-
 ## Author
 
 Muhamad Naufal Nazih  
-Portfolio project untuk kebutuhan magang dan pengembangan kemampuan full-stack Laravel.
+Portfolio project
