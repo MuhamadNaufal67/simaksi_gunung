@@ -16,12 +16,18 @@ SIMAKSI Gunung adalah aplikasi berbasis Laravel yang dirancang untuk membantu pr
 Tempatkan screenshot aplikasi pada folder `docs/images/` dengan nama file berikut:
 
 ![Landing Page] <img width="1685" height="862" alt="image" src="https://github.com/user-attachments/assets/613f5c97-4008-4e27-be59-bbc684f06690" />
-![Dashboard User](docs/images/dashboard-user.png)
-![Form Pendaftaran](docs/images/form-pendaftaran.png)
-![Riwayat Pendaftaran](docs/images/riwayat-pendaftaran.png)
-![Admin Dashboard](docs/images/admin-dashboard.png)
-![Admin Gunung](docs/images/admin-gunung.png)
-![Midtrans Payment](docs/images/midtrans-payment.png)
+![Dashboard User]<img width="1225" height="835" alt="image" src="https://github.com/user-attachments/assets/880caf58-d9ab-4277-a50a-68b167f36936" />
+
+![Form Pendaftaran]<img width="1093" height="751" alt="image" src="https://github.com/user-attachments/assets/7afe2c2e-2b7f-444d-a9f3-12726cb675ac" />
+
+![Riwayat Pendaftaran]<img width="1672" height="755" alt="image" src="https://github.com/user-attachments/assets/c9e1fd39-50d8-4548-8f38-ba25a87e6ddb" />
+
+![Admin Dashboard]<img width="1896" height="872" alt="image" src="https://github.com/user-attachments/assets/fa0f8d4a-97c9-4b1f-8e55-4065b1183d77" />
+
+![Admin Gunung]<img width="1895" height="862" alt="image" src="https://github.com/user-attachments/assets/7558a2be-f0d4-4691-8211-f640d078bf01" />
+
+![Midtrans Payment] <img width="1898" height="861" alt="image" src="https://github.com/user-attachments/assets/3853e46b-80c2-4cb5-adcb-26615e146122" />
+
 
 Jika file belum tersedia, lihat panduan di [docs/images/README.md](docs/images/README.md).
 
